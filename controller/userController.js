@@ -2,10 +2,18 @@ import { User } from "../model/user.model.js";
 
 export const create = async (req, res) => {
   try {
+
+
+
+    
     const userData = new User(req.body);
     if (!userData) {
       res.status(404).json({ msg: "User data Not Found" });
     }
+
+
+
+
     const savedData = await userData.save();
     res.status(200).json(savedData);
   } catch (err) {

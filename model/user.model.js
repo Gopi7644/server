@@ -14,7 +14,7 @@ const usermodel = new mongoose.Schema({
         required: true,
         unique: true
     },
-    pass:{
+    message:{
         type: String,
         required: true
     },
