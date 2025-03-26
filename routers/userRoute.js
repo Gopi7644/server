@@ -1,7 +1,9 @@
 import express from "express";
 import { create, deleteuser, getAll, getById, update } from "../controller/userController.js";
-import { User } from "../model/user.model.js";
+import { User, Video,} from "../model/user.model.js";
 import { upload } from "../middlewares/FileUploader.js";
+import { uploadVideo } from "../middlewares/videoUploader.js";
+
 
 export const route = express.Router();
 
@@ -37,5 +39,33 @@ route.post("/upload", upload.single("image"), async (req, res) => {
       console.log(newUser);
     } catch (error) {
       res.status(500).json({ error: error.message });
+    }
+  });
+
+
+
+  route.post("/upload-video", uploadVideo.single("video"), async (req, res) => {
+    try {
+        if (!req.file) {
+            return res.status(400).json({ message: "No video uploaded" });
+        }
+  
+        console.log("Uploaded Video:", req.file);
+  
+        // नया Video डेटा MongoDB में Save करें
+        const newVideo = new Video({
+            title: req.body.title,
+            description: req.body.description,
+            videoUrl: req.file.path // ✅ Cloudinary से आया Video URL
+        });
+  
+        await newVideo.save();
+  
+        res.status(201).json({
+            message: "Video uploaded successfully",
+            video: newVideo
+        });
+    } catch (error) {
+        res.status(500).json({ error: error.message });
     }
   });
